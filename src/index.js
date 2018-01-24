@@ -1,7 +1,7 @@
 
 /*created by Zulqarnain on 24-01-2018*/
 
-import {createStore} from 'redux'
+import {createStore, combineReducers} from 'redux'
 
 const init_state = {
     result : 1,
@@ -9,7 +9,7 @@ const init_state = {
     lastValues: []
 };
 
-const reducer = (state = init_state, action) => {
+const mathReducer = (state = init_state, action) => {
 
     switch (action.type){
         case 'ADD':
@@ -33,7 +33,24 @@ const reducer = (state = init_state, action) => {
     return state
 };
 
-const store = createStore(reducer);
+const userReducer = (state = {'name': 'zee', 'age': 20, lastValues: []}, action) => {
+
+    switch (action.type){
+        case 'ADD_AGE':
+            state = {
+                ...state,
+                age: state.age + action.payload,
+                lastValues: [...state.lastValues, action.payload]
+            };
+            break;
+        default:
+            break;
+    }
+
+    return state
+};
+
+const store = createStore(combineReducers({mathReducer, userReducer}));
 
 store.subscribe(() => {
    console.log('Store Updated');
@@ -53,4 +70,9 @@ store.dispatch({
 store.dispatch({
     type: 'SUB',
     payload: 251
+});
+
+store.dispatch({
+    type: 'ADD_AGE',
+    payload: 40,
 });
