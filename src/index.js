@@ -1,87 +1,45 @@
-
 /*created by Zulqarnain on 24-01-2018*/
+import {createStore, applyMiddleware, combineReducers} from "redux";
+import logger from "redux-logger";
+import React from "react";
+import ReactDOM from "react-dom";
+import Root from "./app.jsx";
+import {Provider} from 'react-redux'
 
-import {createStore, combineReducers, applyMiddleware} from 'redux'
-import logger from 'redux-logger'
 
-const init_state = {
-    result : 1,
-    user: 'Max',
-    lastValues: []
-};
-
-const mathReducer = (state = init_state, action) => {
-
-    switch (action.type){
-        case 'ADD':
+const changeReducer = (state = {
+    showSignUp: false,
+    showLogin: true
+}, action) => {
+    switch (action.type) {
+        case 'SHOW_LOGIN':
             state = {
-                ...state,
-                result: state.result + action.payload,
-                lastValues: [...state.lastValues, action.payload]
+                showLogin: true,
+                showSignUp: false
             };
             break;
-        case 'SUB':
-            state = {
-                ...state,
-                result: state.result - action.payload,
-                lastValues: [...state.lastValues, action.payload]
-            };
-            break;
-        default:
-            break;
-    }
-
-    return state
-};
-
-const userReducer = (state = {'name': 'zee', 'age': 20, lastValues: []}, action) => {
-
-    switch (action.type){
-        case 'ADD_AGE':
-            state = {
-                ...state,
-                age: state.age + action.payload,
-                lastValues: [...state.lastValues, action.payload]
+        case 'SHOW_SIGN_UP':
+             state = {
+                showLogin: false,
+                showSignUp: true
             };
             break;
         default:
             break;
     }
-
-    return state
+    return state;
 };
 
-const myLogger = (store) => (next) => (action) => {
-    console.log("Logged Action", action);
-    next(action)
-};
-
-const store = createStore(combineReducers({mathReducer, userReducer}),
+const store = createStore(combineReducers({reducer : changeReducer}),
     {},
     applyMiddleware(logger)
 );
 
-// store.subscribe(() => {
-//    console.log('Store Updated');
-//    console.log(store.getState())
-// });
-
-store.dispatch({
-    type: 'ADD',
-    payload: 150
+store.subscribe(() => {
 });
 
-store.dispatch({
-    type: 'ADD',
-    payload: 190
-});
-
-store.dispatch({
-    type: 'SUB',
-    payload: 251
-});
-
-store.dispatch({
-    type: 'ADD_AGE',
-    payload: 40,
-});
+ReactDOM.render(
+    <Provider store={store}>
+        <Root />
+    </Provider>,
+    document.getElementById('root'));
