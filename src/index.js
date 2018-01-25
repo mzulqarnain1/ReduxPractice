@@ -1,7 +1,8 @@
 
 /*created by Zulqarnain on 24-01-2018*/
 
-import {createStore, combineReducers} from 'redux'
+import {createStore, combineReducers, applyMiddleware} from 'redux'
+import logger from 'redux-logger'
 
 const init_state = {
     result : 1,
@@ -50,12 +51,20 @@ const userReducer = (state = {'name': 'zee', 'age': 20, lastValues: []}, action)
     return state
 };
 
-const store = createStore(combineReducers({mathReducer, userReducer}));
+const myLogger = (store) => (next) => (action) => {
+    console.log("Logged Action", action);
+    next(action)
+};
 
-store.subscribe(() => {
-   console.log('Store Updated');
-   console.log(store.getState())
-});
+const store = createStore(combineReducers({mathReducer, userReducer}),
+    {},
+    applyMiddleware(logger)
+);
+
+// store.subscribe(() => {
+//    console.log('Store Updated');
+//    console.log(store.getState())
+// });
 
 store.dispatch({
     type: 'ADD',
