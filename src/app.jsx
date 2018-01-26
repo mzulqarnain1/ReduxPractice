@@ -47,19 +47,19 @@ class UI extends React.Component {
         let login = "";
         let signup = "";
 
-        if (true) {
+        if (this.props.showLogin) {
             login = (
                 <Login submit='#'/>
             )
         }
-        if (!this.props.showLogin) {
+        if (this.props.showSignUp) {
             signup = (
                 <SignUp/>
             )
         }
         return (
             <div>
-                <NavBar onClickLogin={this.props.loginShow} onClickSignUp={this.props.SignUpShow}/>
+                <NavBar onClickLogin={this.props.loginShow} onClickSignUp={this.props.signUpShow}/>
                 {login}
                 {signup}
             </div>
@@ -80,7 +80,7 @@ const mapDispatchToProps = (dispatch) => {
               type: "SHOW_LOGIN"
           })
       },
-      SignUpShow: () => {
+      signUpShow: () => {
           dispatch({
               type: "SHOW_SIGN_UP"
           })
@@ -93,8 +93,13 @@ class Root extends React.Component {
         return (
             <Router history={newHistory}>
                 <div>
-                    {console.log(this.props.toggle)}
-                    <Route exact path="/" render={()=><UI showLogin={true}/>}/>
+                    <Route exact path="/" render={
+                        ()=><UI showLogin={this.props.toggle.showLogin}
+                                showSignUp={this.props.toggle.showSignUp}
+                                loginShow={this.props.loginShow}
+                                signUpShow={this.props.signUpShow}
+                        />
+                    }/>
                     <Route path="/login" component={Login}/>
                     <Route path="/signup" component={SignUp}/>
                 </div>

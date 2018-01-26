@@ -35,9 +35,6 @@ const store = createStore(combineReducers({reducer : changeReducer}),
     applyMiddleware(logger)
 );
 
-store.subscribe(() => {
-});
-
 ReactDOM.render(
     <Provider store={store}>
         <Root />
